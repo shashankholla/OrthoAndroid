@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_margin="25dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp">
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text=""-->
+<!--        android:textSize="20sp"-->
+<!--        android:textStyle="bold" />-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textNoSuggestions"
+        android:hint="Yes">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="clear_text"
+            android:inputType="textNoSuggestions"
+
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+<!--    <EditText-->
+<!--        android:id="@+id/et"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@id/tv"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:background="@drawable/custom_border_textedit"-->
+<!--        android:ems="10"-->
+<!--        />-->
+
+    <ImageButton
+        android:id="@+id/imgbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/et"
+        android:layout_alignRight="@id/et"
+        android:layout_alignBottom="@id/et"
+        android:background="@android:color/transparent"
+        android:padding="13dp"
+        android:src="@drawable/camera" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et"
+        android:orientation="vertical"
+        tools:ignore="ExtraText">
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:nestedScrollingEnabled="false"
+        android:id="@+id/filesList"/>
+    </LinearLayout>
+</RelativeLayout>

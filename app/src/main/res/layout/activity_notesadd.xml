@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NotesActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/cdiagnosistv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Daily Notes"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/cclasset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cdiagnosistv"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/custom_border_textedit"
+            android:ems="10"
+            android:hint="Daily Notes" />
+
+        <Button
+            android:id="@+id/buttonCreate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cclasset"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorPrimary"
+            android:shadowRadius="5"
+            android:text="Create"
+            android:textColor="@android:color/white" />
+
+    </RelativeLayout>
+
+</ScrollView>

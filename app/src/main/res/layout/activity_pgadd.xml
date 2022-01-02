@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PgActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/studytv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Study"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/cclasset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/studytv"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/custom_border_textedit"
+            android:ems="10"
+            android:hint="Add Notes" />
+
+        <ImageButton
+            android:id="@+id/studyib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/cclasset"
+            android:layout_alignRight="@+id/cclasset"
+            android:layout_alignBottom="@+id/cclasset"
+            android:background="@android:color/transparent"
+            android:padding="13dp"
+            android:src="@drawable/camera" />
+
+
+        <TextView
+            android:id="@+id/classtv"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/studyib"
+            android:text="Thesis"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/classet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/classtv"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/custom_border_textedit"
+            android:ems="10"
+            android:hint="Thesis" />
+
+        <ImageButton
+            android:id="@+id/classib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/classet"
+            android:layout_alignRight="@+id/classet"
+            android:layout_alignBottom="@+id/classet"
+            android:background="@android:color/transparent"
+            android:padding="13dp"
+            android:src="@drawable/camera" />
+
+
+
+
+        <TextView
+            android:id="@+id/cpreoptv"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/classet"
+            android:text="Paper Presentation"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/cpreopet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cpreoptv"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/custom_border_textedit"
+            android:ems="10"
+            android:hint="Paper Presentation" />
+
+        <ImageButton
+            android:id="@+id/preopib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/cpreopet"
+            android:layout_alignRight="@+id/cpreopet"
+            android:layout_alignBottom="@+id/cpreopet"
+            android:background="@android:color/transparent"
+            android:padding="13dp"
+            android:src="@drawable/camera" />
+
+        <TextView
+            android:id="@+id/treatmenttv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cpreopet"
+            android:layout_marginTop="10dp"
+            android:text="Poster Presentation"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+
+        <EditText
+            android:id="@+id/treatmentet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/treatmenttv"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/custom_border_textedit"
+            android:ems="10"
+            android:hint="Poster Presentation" />
+
+        <ImageButton
+            android:id="@+id/treatmentib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/treatmentet"
+            android:layout_alignRight="@+id/treatmentet"
+            android:layout_alignBottom="@+id/treatmentet"
+            android:background="@android:color/transparent"
+            android:padding="13dp"
+            android:src="@drawable/camera" />
+
+
+
+
+        <TextView
+            android:id="@+id/cposttv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/treatmentet"
+            android:layout_marginTop="10dp"
+            android:text="Publications"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+
+        <EditText
+            android:id="@+id/cpostet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cposttv"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/custom_border_textedit"
+            android:ems="10"
+            android:hint="Publications" />
+
+        <ImageButton
+            android:id="@+id/cpostib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/cpostet"
+            android:layout_alignRight="@+id/cpostet"
+            android:layout_alignBottom="@+id/cpostet"
+            android:background="@android:color/transparent"
+            android:padding="13dp"
+            android:src="@drawable/camera" />
+        <TextView
+            android:id="@+id/cprognosistv"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cpostet"
+            android:text="Teaching Program"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/cprognosiset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cprognosistv"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/custom_border_textedit"
+            android:ems="10"
+            android:hint="case presentation,seminars" />
+
+        <ImageButton
+            android:id="@+id/imageimplant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/cprognosiset"
+            android:layout_alignRight="@+id/cprognosiset"
+            android:layout_alignBottom="@+id/cprognosiset"
+            android:background="@android:color/transparent"
+            android:padding="13dp"
+            android:src="@drawable/camera" />
+
+
+        <TextView
+            android:id="@+id/examtv"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cprognosiset"
+            android:text="About pg"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+        <EditText
+            android:id="@+id/examet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/examtv"
+            android:background="@drawable/custom_border_textedit"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Add your points about pg" />
+
+        <ImageButton
+            android:id="@+id/examib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/examet"
+            android:layout_alignRight="@+id/examet"
+            android:layout_alignBottom="@+id/examet"
+            android:background="@android:color/transparent"
+            android:padding="13dp"
+            android:src="@drawable/camera" />
+
+
+
+        <TextView
+            android:id="@+id/mydatatv"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/examet"
+            android:text="My Data"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+        <EditText
+            android:id="@+id/mydataet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/mydatatv"
+            android:background="@drawable/custom_border_textedit"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="My Data" />
+
+        <ImageButton
+            android:id="@+id/mydataib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/mydataet"
+            android:layout_alignRight="@+id/mydataet"
+            android:layout_alignBottom="@+id/mydataet"
+            android:background="@android:color/transparent"
+            android:padding="13dp"
+            android:src="@drawable/camera" />
+
+        <TextView
+            android:id="@+id/myplanstv"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/mydataet"
+            android:text="Credits"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+        <EditText
+            android:id="@+id/myplanset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/myplanstv"
+            android:background="@drawable/custom_border_textedit"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Credits" />
+
+        <ImageButton
+            android:id="@+id/myplansib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/myplanset"
+            android:layout_alignRight="@+id/myplanset"
+            android:layout_alignBottom="@+id/myplanset"
+            android:background="@android:color/transparent"
+            android:padding="13dp"
+            android:src="@drawable/camera" />
+
+
+        <TextView
+            android:id="@+id/bookstv"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/myplanset"
+            android:text="What books to buy"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/bookset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bookstv"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/custom_border_textedit"
+            android:ems="10"
+            android:hint="Books" />
+
+        <ImageButton
+            android:id="@+id/booksib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/bookset"
+            android:layout_alignRight="@+id/bookset"
+            android:layout_alignBottom="@+id/bookset"
+            android:background="@android:color/transparent"
+            android:padding="13dp"
+            android:src="@drawable/camera" />
+
+
+        <TextView
+            android:id="@+id/teachtv"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bookset"
+            android:text="Teaching Program"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+        <EditText
+            android:id="@+id/teachet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/teachtv"
+            android:background="@drawable/custom_border_textedit"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="PPT,QandA,Discussion" />
+
+        <ImageButton
+            android:id="@+id/teachib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/teachet"
+            android:layout_alignRight="@+id/teachet"
+            android:layout_alignBottom="@+id/teachet"
+            android:background="@android:color/transparent"
+            android:padding="13dp"
+            android:src="@drawable/camera" />
+
+
+
+        <TextView
+            android:id="@+id/aimstv"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/teachet"
+            android:text="Study aims"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+        <EditText
+            android:id="@+id/aimset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/aimstv"
+            android:background="@drawable/custom_border_textedit"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Study aims" />
+
+        <ImageButton
+            android:id="@+id/aimsib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/aimset"
+            android:layout_alignRight="@+id/aimset"
+            android:layout_alignBottom="@+id/aimset"
+            android:background="@android:color/transparent"
+            android:padding="13dp"
+            android:src="@drawable/camera" />
+
+        <Button
+            android:id="@+id/buttonCreate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/aimset"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorPrimary"
+            android:shadowRadius="5"
+            android:text="Create"
+            android:textColor="@android:color/white" />
+
+    </RelativeLayout>
+
+</ScrollView>

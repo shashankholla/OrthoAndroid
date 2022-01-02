@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "737246468522",
+    "project_id": "ortho-cb424",
+    "storage_bucket": "ortho-cb424.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:737246468522:android:7692795a6cebc2b1b2b3d3",
+        "android_client_info": {
+          "package_name": "com.sharcodes.ortho"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "737246468522-ifn17fncaddemlq1orcafu45hgo609eg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sharcodes.ortho",
+            "certificate_hash": "02925474d9c80841d1dd8b26cd5a01e3eedd58c9"
+          }
+        },
+        {
+          "client_id": "737246468522-onp71ct08vtg9jk7kk4iqq9l1ll48j25.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBXShwYesGZpUs5nMitnU6_UDgtH62Aew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "737246468522-onp71ct08vtg9jk7kk4iqq9l1ll48j25.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
