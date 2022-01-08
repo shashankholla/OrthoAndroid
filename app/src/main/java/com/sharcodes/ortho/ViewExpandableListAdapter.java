@@ -2,8 +2,14 @@ package com.sharcodes.ortho;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -14,13 +20,22 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.piasy.biv.BigImageViewer;
-import com.github.piasy.biv.loader.glide.GlideImageLoader;
+//import com.github.piasy.biv.loader.glide.GlideImageLoader;
+import com.sharcodes.ortho.helper.DBHelper;
+import com.sharcodes.ortho.helper.DbBitmapUtility;
+import com.stfalcon.imageviewer.StfalconImageViewer;
+import com.stfalcon.imageviewer.loader.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,10 +110,90 @@ public class ViewExpandableListAdapter extends BaseExpandableListAdapter {
         filesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent i = new Intent(context, ImageViwer.class);
-                i.putExtra("image", filePath.get(position));
-                context.startActivity(i);
 
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+                boolean offline = sharedPref.getBoolean("offline", false);
+
+                if(offline){
+                    String imageUUID = filePath.get(position);
+                    DBHelper dbHelper = new DBHelper(context);
+                    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+                    String selection = "UUID=?" ;
+                    String[] selectionArgs = {imageUUID};
+
+                    Cursor cursor = db.query("IMAGES", null, selection, selectionArgs, null, null, null, null);
+                    if (cursor.moveToFirst()) {
+                        while (!cursor.isAfterLast()) {
+                            String uuid = cursor.getString(cursor.getColumnIndex("UUID"));
+//                            byte[] blob = cursor.getBlob(cursor.getColumnIndex("DATA"));
+                            String imageUri = cursor.getString(cursor.getColumnIndex("DATA"));
+//                            Bitmap theImage = DbBitmapUtility.getImage(blob);
+                            new StfalconImageViewer.Builder<Uri>(context, new Uri[]{Uri.parse(imageUri)}, new ImageLoader<Uri>() {
+                                @Override
+                                public void loadImage(ImageView imageView, Uri image) {
+
+                                    CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
+                                    circularProgressDrawable.setStrokeWidth(5f);
+                                    circularProgressDrawable.setCenterRadius(30f);
+                                    circularProgressDrawable.start();
+
+                                    RequestOptions requestOptions = new RequestOptions();
+                                    requestOptions.placeholder(circularProgressDrawable);
+
+//                            requestOptions.skipMemoryCache(true);
+                                    requestOptions.fitCenter();
+
+
+                                    Glide.with(context)
+//                                            .asBitmap()
+                                            .load(image)
+                                            .apply(requestOptions)
+                                            .into(imageView);
+                                }
+                            })
+                                    .withHiddenStatusBar(true)
+                                    .show();
+
+                            cursor.moveToNext();
+                        }
+                    }
+
+
+
+                } else {
+//                    Intent i = new Intent(context, ImageViwer.class);
+//                    i.putExtra("image", filePath.get(position));
+                    Uri uri = Uri.parse(filePath.get(position));
+
+
+                    new StfalconImageViewer.Builder<Uri>(context, new Uri[]{uri}, new ImageLoader<Uri>() {
+                        @Override
+                        public void loadImage(ImageView imageView, Uri image) {
+
+                            CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
+                            circularProgressDrawable.setStrokeWidth(5f);
+                            circularProgressDrawable.setCenterRadius(30f);
+                            circularProgressDrawable.start();
+
+                            RequestOptions requestOptions = new RequestOptions();
+                            requestOptions.placeholder(circularProgressDrawable);
+
+//                            requestOptions.skipMemoryCache(true);
+                            requestOptions.fitCenter();
+
+                            Glide.with(context)
+                                    .load(image)
+                                    .apply(requestOptions)
+                                    .into(imageView);
+                        }
+                    })
+                            .withHiddenStatusBar(true)
+                            .show();
+
+
+//                    context.startActivity(i);
+                }
 
             }
         });

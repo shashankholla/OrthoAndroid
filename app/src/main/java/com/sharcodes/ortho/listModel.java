@@ -29,6 +29,8 @@ class ListModel {
         data.add(new FormClass("rounds","Rounds","Biography"));
         data.add(new FormClass("phnumber","Number","Biography"));
         data.add(new FormClass("history","History","Biography"));
+
+
         data.add(new FormClass("fitness","Fitness","PreOp"));
         data.add(new FormClass("afitness","Anaesthesia Fitness","PreOp"));
         data.add(new FormClass("poOthers","Others","PreOp"));
@@ -47,6 +49,8 @@ class ListModel {
         data.add(new FormClass("preopClinic","Pre OP Clinical Status","PreOp"));
         data.add(new FormClass("good","Good","PreOp"));
         data.add(new FormClass("find","Find","PreOp"));
+
+
         data.add(new FormClass("inv","Inv","patientDetails"));
         data.add(new FormClass("scrubbing","Scrubbing","patientDetails"));
         data.add(new FormClass("approach","Approach","patientDetails"));
@@ -60,9 +64,11 @@ class ListModel {
         data.add(new FormClass("procedure","Procedure","patientDetails"));
         data.add(new FormClass("iimplants","Iimplants","patientDetails"));
         data.add(new FormClass("dressing","Dressing","patientDetails"));
+
         data.add(new FormClass("postoporder","Postoporder","Post Op"));
         data.add(new FormClass("postoprounds","Postoprounds","Post Op"));
         data.add(new FormClass("complaints","Complaints","Post Op"));
+
         data.add(new FormClass("diagnosispost","Diagnosispost","patientDetails"));
         data.add(new FormClass("status","Status","patientDetails"));
         data.add(new FormClass("movements","Movements","patientDetails"));

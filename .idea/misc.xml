@@ -29,6 +29,7 @@
         <entry key="..\:/Users/shash/Desktop/Ortho/app/src/main/res/layout/activity_add_list_item.xml" value="0.19610507246376813" />
         <entry key="..\:/Users/shash/Desktop/Ortho/app/src/main/res/layout/activity_home.xml" value="0.23097826086956522" />
         <entry key="..\:/Users/shash/Desktop/Ortho/app/src/main/res/layout/activity_image_viwer.xml" value="0.13677536231884058" />
+        <entry key="..\:/Users/shash/Desktop/Ortho/app/src/main/res/layout/activity_login.xml" value="0.264" />
         <entry key="..\:/Users/shash/Desktop/Ortho/app/src/main/res/layout/activity_main.xml" value="0.19610507246376813" />
         <entry key="..\:/Users/shash/Desktop/Ortho/app/src/main/res/layout/activity_new.xml" value="0.12708333333333333" />
         <entry key="..\:/Users/shash/Desktop/Ortho/app/src/main/res/layout/activity_notes.xml" value="0.13802083333333334" />
@@ -40,6 +41,7 @@
         <entry key="..\:/Users/shash/Desktop/Ortho/app/src/main/res/layout/fragment_container.xml" value="0.15806159420289856" />
         <entry key="..\:/Users/shash/Desktop/Ortho/app/src/main/res/layout/fragment_new_activity.xml" value="0.15806159420289856" />
         <entry key="..\:/Users/shash/Desktop/Ortho/app/src/main/res/menu/bottom_nav_menu.xml" value="0.225" />
+        <entry key="..\:/Users/shash/Desktop/Ortho/app/src/main/res/menu/dbexportimport.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

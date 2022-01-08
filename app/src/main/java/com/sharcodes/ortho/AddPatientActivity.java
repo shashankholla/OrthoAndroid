@@ -3,17 +3,22 @@ package com.sharcodes.ortho;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -42,8 +47,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
+import com.sharcodes.ortho.helper.DBHelper;
+import com.sharcodes.ortho.helper.DbBitmapUtility;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -65,6 +73,7 @@ import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class AddPatientActivity extends AppCompatActivity {
@@ -86,6 +95,9 @@ public class AddPatientActivity extends AppCompatActivity {
     Integer doneCount = 0;
 
     ListModel listModel;
+
+    String directorypath = Environment.getExternalStorageDirectory() + "/Ortho";
+
 
     StorageTask uploadTask;
     List<Task> myTasks = new ArrayList<>();
@@ -174,7 +186,19 @@ public class AddPatientActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Do firebase data push
-                firebasepush();
+
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                boolean offline = sharedPref.getBoolean("offline", false);
+
+                if (offline) {
+                    try {
+                        addToDatabase();
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }else {
+                    firebasepush();
+                }
             }
         });
     }
@@ -194,20 +218,90 @@ public class AddPatientActivity extends AppCompatActivity {
 //            mObject = obj;
     }
 
+    private String getBase64String(Bitmap bitmap) {
+
+        // give your image file url in mCurrentPhotoPath
+//        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        // In case you want to compress your image, here it's at 40%
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    void addToDatabase() throws IOException {
+        progressDialog.show();
+        DBHelper dbHelper = new DBHelper(this);
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        for(String key : expandableListDetail.keySet()) {
+            for (String subKey : expandableListDetail.get(key).keySet()) {
+                for (String imageKeys : expandableListDetail.get(key).get(subKey).imagePath.keySet()) {
+                    String uriString = expandableListDetail.get(key).get(subKey).imagePath.get(imageKeys);
+
+                    Pattern p = Pattern.compile("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$");
+
+                    if(!p.matcher(uriString).matches()) {
+
+//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(uriString));
+//                        String base64Enc = getBase64String(bitmap);
+//                        byte[] data = DbBitmapUtility.getBytes(bitmap);
+                        ContentValues values = new ContentValues();
+                        String uuidImage = UUID.randomUUID().toString();
+                        values.put("UUID", uuidImage);
+//                        values.put("DATA", data);
+                        values.put("DATA", uriString);
+
+                        db.insert("IMAGES", null, values);
+
+                        expandableListDetail.get(key).get(subKey).imagePath.put(imageKeys, uuidImage);
+                    }
+                }
+            }
+        }
+
+
+
+        ContentValues values = new ContentValues();
+
+        values.put("DATA", new Gson().toJson(expandableListDetail));
+
+
+
+        if(docId != null) {
+//            values.put("UUID", UUID.randomUUID().toString());
+            db.update("PATIENTS", values, "UUID=?",new String[]{docId});
+        } else {
+            values.put("UUID", UUID.randomUUID().toString());
+            db.insert("PATIENTS", null, values);
+
+        }
+
+        progressDialog.hide();
+        Toast.makeText(AddPatientActivity.this, "Added", Toast.LENGTH_SHORT).show();
+        AddPatientActivity.this.finish();
+
+
+    }
+
+
     void firebasepush()  {
         progressDialog.show();
         HashMap<String, String> uidName = new HashMap<>();
         MutableLiveData<Integer> uploadCount = new MutableLiveData<>();
         uploadCount.setValue(0);
-        for(String key : expandableListDetail.keySet()) {
-            for(String subKey :  expandableListDetail.get(key).keySet()) {
-                for (String imageKeys : expandableListDetail.get(key).get(subKey).imagePath.keySet()) {
-                    {
-//                        uploadCount.setValue(uploadCount.getValue() + 1);
-                    }
-                }
-            }
-        }
+//        for(String key : expandableListDetail.keySet()) {
+//            for(String subKey :  expandableListDetail.get(key).keySet()) {
+//                for (String imageKeys : expandableListDetail.get(key).get(subKey).imagePath.keySet()) {
+//                    {
+////                        uploadCount.setValue(uploadCount.getValue() + 1);
+//                    }
+//                }
+//            }
+//        }
 
         for(String key : expandableListDetail.keySet()) {
             for (String subKey : expandableListDetail.get(key).keySet()) {
@@ -363,8 +457,7 @@ public class AddPatientActivity extends AppCompatActivity {
         String dt = sdf.format(new Date());
 
         File imageFile = null;
-        String directorypath = Environment.getExternalStorageDirectory()
-                + "/Ortho";
+
         File mediaStorageDir = getApplicationContext().getExternalFilesDir(null);
         File directory = new File(directorypath);
         if (! directory.exists()){
@@ -375,10 +468,8 @@ public class AddPatientActivity extends AppCompatActivity {
         }
 
         imagePath =  directorypath + "/Camera_" + dt + ".png";
-            imageFile = new File(imagePath);
-        Log.e("New Camera Image Path:-",
-                Environment.getExternalStorageDirectory()
-                        + "/FrameFace/" + "Camera_" + dt + ".png");
+        imageFile = new File(imagePath);
+
 
         if (!imageFile.exists())
             imageFile.createNewFile();

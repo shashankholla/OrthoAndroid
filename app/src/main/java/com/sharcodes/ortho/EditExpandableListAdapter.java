@@ -71,7 +71,7 @@ public class EditExpandableListAdapter extends BaseExpandableListAdapter {
             this.btn = (ImageButton) v.findViewById(R.id.imgbtn);
             this.myCustomEditTextListener = myCustomEditTextListener;
             this.et.getEditText().addTextChangedListener(this.myCustomEditTextListener);
-
+            this.et.getEditText().setSelection(this.et.getEditText().getText().length());
         }
     }
 

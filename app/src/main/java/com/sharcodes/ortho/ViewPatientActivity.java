@@ -4,10 +4,13 @@ import static com.sharcodes.ortho.helper.JSONHelper.mapToJSON;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +39,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
+import com.sharcodes.ortho.helper.DBHelper;
 import com.sharcodes.ortho.helper.JSONHelper;
 
 import org.json.JSONException;
@@ -152,32 +156,66 @@ public class ViewPatientActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onResume() {
         super.onResume();
 
-        db.collection("users").document(docId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean offline = sharedPref.getBoolean("offline", false);
 
+        if (offline) {
 
-                try {
-                    String dataS = mapToJSON(documentSnapshot.getData()).toString();
-                    expandableListDetail =  new Gson().fromJson(dataS, new TypeToken<LinkedHashMap<String,LinkedHashMap<String,FormClass>>>(){}.getType());
-                    for(String topKey : dummyDetail.keySet()) {
-                        for(String key : dummyDetail.get(topKey).keySet()) {
-                            dummyDetail.get(topKey).replace(key,expandableListDetail.get(topKey).get(key));
+            DBHelper dbHelper = new DBHelper(this);
+            String selection = "UUID" + " = ?";
+            String[] selectionArgs = {docId};
+
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor cursor = db.query("PATIENTS", null, selection, selectionArgs, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    String data = cursor.getString(cursor.getColumnIndex("DATA"));
+                    String uuid = cursor.getString(cursor.getColumnIndex("UUID"));
+                    expandableListDetail = new Gson().fromJson(data, new TypeToken<LinkedHashMap<String, LinkedHashMap<String, FormClass>>>() {
+                    }.getType());
+
+                    for (String topKey : dummyDetail.keySet()) {
+                        for (String key : dummyDetail.get(topKey).keySet()) {
+                            dummyDetail.get(topKey).replace(key, expandableListDetail.get(topKey).get(key));
                         }
                     }
                     expandableListAdapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
+                    cursor.moveToNext();
                 }
-
-
             }
-        });
 
+
+        } else {
+            db.collection("users").document(docId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+
+                    try {
+                        String dataS = mapToJSON(documentSnapshot.getData()).toString();
+                        expandableListDetail = new Gson().fromJson(dataS, new TypeToken<LinkedHashMap<String, LinkedHashMap<String, FormClass>>>() {
+                        }.getType());
+                        for (String topKey : dummyDetail.keySet()) {
+                            for (String key : dummyDetail.get(topKey).keySet()) {
+                                dummyDetail.get(topKey).replace(key, expandableListDetail.get(topKey).get(key));
+                            }
+                        }
+                        expandableListAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            });
+
+        }
     }
 }

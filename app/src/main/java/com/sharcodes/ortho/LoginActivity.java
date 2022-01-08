@@ -2,14 +2,19 @@ package com.sharcodes.ortho;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +28,7 @@ import java.util.List;
 public class LoginActivity extends Activity  {
     Button b1,b2;
     EditText ed1,ed2;
-
+    Switch offlineSwitch;
     TextView tx1;
     int counter = 3;
     String[] permissions = new String[]{
@@ -41,6 +46,9 @@ public class LoginActivity extends Activity  {
         }
 
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+
         b1 = (Button)findViewById(R.id.button);
         ed1 = (EditText)findViewById(R.id.editText);
         ed2 = (EditText)findViewById(R.id.editText2);
@@ -48,6 +56,23 @@ public class LoginActivity extends Activity  {
         b2 = (Button)findViewById(R.id.button2);
         tx1 = (TextView)findViewById(R.id.roundstv);
         tx1.setVisibility(View.GONE);
+
+        offlineSwitch = findViewById(R.id.offlineswitch);
+
+        if(sharedPref.getBoolean("offline", false)) {
+            offlineSwitch.setChecked(true);
+        }
+
+        offlineSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putBoolean("offline", b);
+                    editor.commit();
+
+            }
+        });
 
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
