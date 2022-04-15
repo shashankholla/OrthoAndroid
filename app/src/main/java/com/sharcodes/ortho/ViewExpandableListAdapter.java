@@ -1,25 +1,19 @@
 package com.sharcodes.ortho;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -30,34 +24,51 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.github.piasy.biv.BigImageViewer;
-//import com.github.piasy.biv.loader.glide.GlideImageLoader;
 import com.sharcodes.ortho.helper.DBHelper;
-import com.sharcodes.ortho.helper.DbBitmapUtility;
+import com.sharcodes.ortho.models.FormClass;
 import com.stfalcon.imageviewer.StfalconImageViewer;
 import com.stfalcon.imageviewer.loader.ImageLoader;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 
 public class ViewExpandableListAdapter extends BaseExpandableListAdapter {
 
-    private Context context;
-    private List<String> expandableListTitle;
-    public LinkedHashMap<String,LinkedHashMap<String,FormClass>> expandableListDetail;
+    private final Context context;
+    private final List<String> expandableListTitle;
+    public LinkedHashMap<String, LinkedHashMap<String, FormClass>> expandableListDetail;
+    public boolean online;
 
     public ViewExpandableListAdapter(Context context, List<String> expandableListTitle,
-                                     LinkedHashMap<String,LinkedHashMap<String,FormClass>> expandableListDetail) {
+                                     LinkedHashMap<String, LinkedHashMap<String, FormClass>> expandableListDetail, boolean online) {
         this.context = context;
         this.expandableListTitle = expandableListTitle;
         this.expandableListDetail = expandableListDetail;
+        this.online = online;
 
     }
 
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter adapter = listView.getAdapter();
 
+        if (adapter == null) {
+            return;
+        }
+        ViewGroup vg = listView;
+        int totalHeight = 0;
+        for (int i = 0; i < adapter.getCount(); i++) {
+            View listItem = adapter.getView(i, null, vg);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams par = listView.getLayoutParams();
+        par.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));
+        listView.setLayoutParams(par);
+        listView.requestLayout();
+    }
 
     @Override
     public Object getChild(int listPosition, int expandedListPosition) {
@@ -86,40 +97,54 @@ public class ViewExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = layoutInflater.inflate(R.layout.activity_view_list_item, null);
         }
 
-        TextView title = (TextView) convertView
+        TextView title = convertView
                 .findViewById(R.id.titleTv);
         title.setText(titleText);
 
-        TextView contentTv = (TextView) convertView
+        TextView contentTv = convertView
                 .findViewById(R.id.contentTv);
         contentTv.setText(contentText);
 
         RelativeLayout rv = convertView.findViewById(R.id.fullView);
 
         ListView filesList = convertView.findViewById(R.id.filesList);
+
         filesList.setNestedScrollingEnabled(false);
         List<String> fileName = new ArrayList<>();
         List<String> filePath = new ArrayList<>();
-        for(String c: child.imagePath.keySet()) {
+
+        for (String c : child.imagePath.keySet()) {
             fileName.add(c);
             filePath.add(child.imagePath.get(c));
         }
 
+        List<String> links = new ArrayList<>();
+
+        for (String c : child.links.keySet()) {
+            links.add(c);
+        }
+
 
         filesList.setAdapter(new ArrayAdapter<String>(context, R.layout.activity_view_imagelist, fileName));
+
+
+        ListView linksList = convertView.findViewById(R.id.linksList);
+
+        linksList.setAdapter(new ArrayAdapter<String>(context, R.layout.activity_view_imagelist, links));
+
         filesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-                boolean offline = sharedPref.getBoolean("offline", false);
+//                boolean offline = sharedPref.getBoolean("offline", false);
 
-                if(offline){
+                if (!online) {
                     String imageUUID = filePath.get(position);
                     DBHelper dbHelper = new DBHelper(context);
                     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-                    String selection = "UUID=?" ;
+                    String selection = "UUID=?";
                     String[] selectionArgs = {imageUUID};
 
                     Cursor cursor = db.query("IMAGES", null, selection, selectionArgs, null, null, null, null);
@@ -160,7 +185,6 @@ public class ViewExpandableListAdapter extends BaseExpandableListAdapter {
                     }
 
 
-
                 } else {
 //                    Intent i = new Intent(context, ImageViwer.class);
 //                    i.putExtra("image", filePath.get(position));
@@ -199,6 +223,7 @@ public class ViewExpandableListAdapter extends BaseExpandableListAdapter {
         });
 
         setListViewHeightBasedOnChildren(filesList);
+        setListViewHeightBasedOnChildren(linksList);
 
 //        ImageButton btn = (ImageButton) convertView.findViewById(R.id.imgbtn);
 //        btn.setOnClickListener(new View.OnClickListener() {
@@ -242,7 +267,7 @@ public class ViewExpandableListAdapter extends BaseExpandableListAdapter {
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.activity_add_list_group, null);
         }
-        TextView listTitleTextView = (TextView) convertView
+        TextView listTitleTextView = convertView
                 .findViewById(R.id.listTitle);
         listTitleTextView.setTypeface(null, Typeface.BOLD);
         listTitleTextView.setText(listTitle);
@@ -262,25 +287,5 @@ public class ViewExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
         super.registerDataSetObserver(observer);
-    }
-
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter adapter = listView.getAdapter();
-
-        if (adapter == null) {
-            return;
-        }
-        ViewGroup vg = listView;
-        int totalHeight = 0;
-        for (int i = 0; i < adapter.getCount(); i++) {
-            View listItem = adapter.getView(i, null, vg);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams par = listView.getLayoutParams();
-        par.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));
-        listView.setLayoutParams(par);
-        listView.requestLayout();
     }
 }

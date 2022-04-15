@@ -7,17 +7,26 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-public class DBHelper  extends SQLiteOpenHelper {
+public class DBHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "FeedReader.db";
-    public static final String DATA_TABLE = "PATIENTS";
+    public static final String[] DATA_TABLE = new String[]{"unit1", "unit2", "unit3", "unit4", "unit5"};
+    public static final String[] NOTES_TABLE = new String[]{"unit1", "unit2", "unit3", "unit4", "unit5"};
+
+
     public static final String IMAGE_TABLE = "IMAGES";
 
     private static final String SQL_CREATE_ENTRIES_DATA =
-            "CREATE TABLE " + DATA_TABLE + " ( UUID TEXT PRIMARY KEY, DATA TEXT )";
+            "CREATE TABLE TABLE_NAME ( UUID TEXT PRIMARY KEY, DATA TEXT )";
+
+    private static final String SQL_CREATE_ENTRIES_NOTES =
+            "CREATE TABLE NOTES_TABLE_NAME ( UUID TEXT PRIMARY KEY, TITLE TEXT, CONTENT TEXT, DATE TEXT )";
 
     private static final String SQL_DELETE_ENTRIES_DATA =
-            "DROP TABLE IF EXISTS " + DATA_TABLE;
+            "DROP TABLE IF EXISTS TABLE_NAME";
+
+    private static final String SQL_DELETE_ENTRIES_NOTES =
+            "DROP TABLE IF EXISTS NOTES_TABLE_NAME";
 
     private static final String SQL_CREATE_ENTRIES_IMAGE =
             "CREATE TABLE " + IMAGE_TABLE + " ( UUID TEXT PRIMARY KEY, DATA BLOB )";
@@ -35,13 +44,32 @@ public class DBHelper  extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(SQL_CREATE_ENTRIES_IMAGE);
-        sqLiteDatabase.execSQL(SQL_CREATE_ENTRIES_DATA);
+
+
+        for (String tableName : DATA_TABLE) {
+            sqLiteDatabase.execSQL(SQL_CREATE_ENTRIES_DATA.replace("TABLE_NAME", tableName));
+        }
+
+        for (String tableName : NOTES_TABLE) {
+            sqLiteDatabase.execSQL(SQL_CREATE_ENTRIES_NOTES.replace("TABLE_NAME", tableName));
+        }
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL(SQL_DELETE_ENTRIES_DATA);
+
         sqLiteDatabase.execSQL(SQL_DELETE_ENTRIES_IMAGE);
+        sqLiteDatabase.execSQL(SQL_DELETE_ENTRIES_NOTES);
+
+        for (String tableName : DATA_TABLE) {
+            sqLiteDatabase.execSQL(SQL_DELETE_ENTRIES_DATA.replace("TABLE_NAME", tableName));
+        }
+
+        for (String tableName : NOTES_TABLE) {
+            sqLiteDatabase.execSQL(SQL_DELETE_ENTRIES_NOTES.replace("TABLE_NAME", tableName));
+        }
+
         onCreate(sqLiteDatabase);
 
     }

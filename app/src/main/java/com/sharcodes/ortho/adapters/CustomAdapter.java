@@ -1,4 +1,4 @@
-package com.sharcodes.ortho;
+package com.sharcodes.ortho.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,12 +9,12 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-
+import com.sharcodes.ortho.models.FormClass;
+import com.sharcodes.ortho.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,13 +23,14 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder>  implements Filterable {
-    List<HashMap<String,LinkedHashMap<String,FormClass>>> data;
-    List<HashMap<String,LinkedHashMap<String,FormClass>>> dataOriginal;
-    Context context;
+public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> implements Filterable {
     private final OnItemClickListener listener;
-    List<HashMap<String,LinkedHashMap<String,FormClass>>> list;
-    public CustomAdapter( List<HashMap<String,LinkedHashMap<String,FormClass>>> data, Context context, OnItemClickListener listener){
+    List<HashMap<String, LinkedHashMap<String, FormClass>>> data;
+    List<HashMap<String, LinkedHashMap<String, FormClass>>> dataOriginal;
+    Context context;
+    List<HashMap<String, LinkedHashMap<String, FormClass>>> list;
+
+    public CustomAdapter(List<HashMap<String, LinkedHashMap<String, FormClass>>> data, Context context, OnItemClickListener listener) {
         this.data = data;
         this.dataOriginal = data;
         this.context = context;
@@ -42,13 +43,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                data = (List<HashMap<String,LinkedHashMap<String,FormClass>>>) results.values;
+                data = (List<HashMap<String, LinkedHashMap<String, FormClass>>>) results.values;
                 notifyDataSetChanged();
             }
 
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                List<HashMap<String,LinkedHashMap<String,FormClass>>> filteredResults = null;
+                List<HashMap<String, LinkedHashMap<String, FormClass>>> filteredResults = null;
                 if (constraint.length() == 0) {
                     filteredResults = dataOriginal;
                 } else {
@@ -61,10 +62,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 return results;
             }
 
-            protected List<HashMap<String,LinkedHashMap<String,FormClass>>> getFilteredResults(String constraint) {
-                List<HashMap<String,LinkedHashMap<String,FormClass>>> results = new ArrayList<>();
+            protected List<HashMap<String, LinkedHashMap<String, FormClass>>> getFilteredResults(String constraint) {
+                List<HashMap<String, LinkedHashMap<String, FormClass>>> results = new ArrayList<>();
 
-                for (HashMap<String,LinkedHashMap<String,FormClass>> item : dataOriginal) {
+                for (HashMap<String, LinkedHashMap<String, FormClass>> item : dataOriginal) {
                     if (item.get("Biography").get("name").content.toLowerCase(Locale.ROOT).contains(constraint.toLowerCase(Locale.ROOT))) {
                         results.add(item);
                     }
@@ -73,29 +74,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             }
         };
     }
-
-    public interface OnItemClickListener {
-        void onItemClick(HashMap<String, LinkedHashMap<String,FormClass>> item);
-    }
-
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView patientName;
-        public ImageView imageView;
-        public CardView cardView;
-
-        public ViewHolder(View view) {
-            super(view);
-            // Define click listener for the ViewHolder's View
-            cardView = view.findViewById(R.id.cardView);
-            patientName = (TextView) view.findViewById(R.id.patientName);
-        }
-
-        public TextView getTextView() {
-            return patientName;
-        }
-    }
-
 
     public CustomAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
@@ -114,21 +92,35 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull CustomAdapter.ViewHolder viewHolder, int position) {
         viewHolder.patientName.setText(data.get(position).get("Biography").get("name").content);
-
-//        viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//
-//            }
-//        });
-
-
+        viewHolder.serialNumber.setText(String.valueOf(position + 1));
     }
 
     @Override
     public int getItemCount() {
         return data.size();
 
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(HashMap<String, LinkedHashMap<String, FormClass>> item);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView patientName;
+        public ImageView imageView;
+        public CardView cardView;
+        public TextView serialNumber;
+
+        public ViewHolder(View view) {
+            super(view);
+            // Define click listener for the ViewHolder's View
+            cardView = view.findViewById(R.id.cardView);
+            patientName = view.findViewById(R.id.patientName);
+            serialNumber = view.findViewById(R.id.serialNumber);
+        }
+
+        public TextView getTextView() {
+            return patientName;
+        }
     }
 }

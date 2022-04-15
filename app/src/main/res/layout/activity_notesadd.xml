@@ -1,47 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
     tools:context=".NotesActivity">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:orientation="horizontal">
+
 
         <TextView
-            android:id="@+id/cdiagnosistv"
+            android:id="@+id/head"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Daily Notes"
             android:textSize="20dp"
-            android:textStyle="bold" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/title"
+            android:textStyle="bold"
+            tools:ignore="MissingConstraints" />
 
         <EditText
-            android:id="@+id/cclasset"
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/cdiagnosistv"
+            app:layout_constraintTop_toBottomOf="@id/head"
             android:layout_marginTop="10dp"
             android:background="@drawable/custom_border_textedit"
             android:ems="10"
-            android:hint="Daily Notes" />
 
-        <Button
-            android:id="@+id/buttonCreate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/cclasset"
+            android:hint="Title" />
+
+        <EditText
             android:layout_marginTop="10dp"
-            android:background="@color/colorPrimary"
-            android:shadowRadius="5"
-            android:text="Create"
-            android:textColor="@android:color/white" />
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_border_textedit"
+            android:id="@+id/date"/>
 
-    </RelativeLayout>
+        <EditText
+            android:id="@+id/content"
+            app:layout_constraintTop_toBottomOf="@id/date"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/custom_border_textedit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:inputType="text|textMultiLine"
+            android:gravity="top"/>
 
-</ScrollView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+
+        android:id="@+id/delete"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintRight_toLeftOf="@id/save"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_baseline_delete_outline_24"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+
+        android:id="@+id/save"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_add_black_24dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

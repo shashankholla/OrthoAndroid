@@ -9,16 +9,4 @@ public class User {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 }

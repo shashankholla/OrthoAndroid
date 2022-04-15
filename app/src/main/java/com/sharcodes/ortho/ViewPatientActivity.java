@@ -7,14 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.OpenableColumns;
-import android.util.Log;
 import android.view.View;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -22,44 +18,33 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.reflect.TypeToken;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
+import com.sharcodes.ortho.activities.AddPatientActivity;
 import com.sharcodes.ortho.helper.DBHelper;
-import com.sharcodes.ortho.helper.JSONHelper;
+import com.sharcodes.ortho.models.FormClass;
+import com.sharcodes.ortho.models.ListModel;
 
 import org.json.JSONException;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class ViewPatientActivity extends AppCompatActivity {
 
     ExpandableListView expandableListView;
     ViewExpandableListAdapter expandableListAdapter;
     List<String> expandableListTitle;
-    LinkedHashMap<String,LinkedHashMap<String,FormClass>> expandableListDetail;
-    LinkedHashMap<String,LinkedHashMap<String,FormClass>> dummyDetail;
+    LinkedHashMap<String, LinkedHashMap<String, FormClass>> expandableListDetail;
+    LinkedHashMap<String, LinkedHashMap<String, FormClass>> dummyDetail;
 
     FirebaseFirestore db;
     FirebaseStorage storage;
@@ -71,7 +56,8 @@ public class ViewPatientActivity extends AppCompatActivity {
     ListModel listModel;
     String docId;
     String data;
-
+    String unit;
+    Boolean online;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -87,18 +73,24 @@ public class ViewPatientActivity extends AppCompatActivity {
 
         data = getIntent().getStringExtra("key");
         docId = getIntent().getStringExtra("docId");
-        expandableListDetail = new Gson().fromJson(data, new TypeToken<LinkedHashMap<String,LinkedHashMap<String,FormClass>>>(){}.getType());
-        expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
+        unit = getIntent().getStringExtra("unit");
+        online = getIntent().getBooleanExtra("online", false);
+
+        expandableListDetail = new Gson().fromJson(data, new TypeToken<LinkedHashMap<String, LinkedHashMap<String, FormClass>>>() {
+        }.getType());
+        expandableListView = findViewById(R.id.expandableListView);
         listModel = new ListModel();
         dummyDetail = listModel.getData();
-        for(String topKey : dummyDetail.keySet()) {
-            for(String key : dummyDetail.get(topKey).keySet()) {
-                dummyDetail.get(topKey).replace(key,expandableListDetail.get(topKey).get(key));
+
+
+        for (String topKey : dummyDetail.keySet()) {
+            for (String key : dummyDetail.get(topKey).keySet()) {
+                dummyDetail.get(topKey).replace(key, expandableListDetail.get(topKey).get(key));
             }
         }
 
         expandableListTitle = new ArrayList<String>(dummyDetail.keySet());
-        expandableListAdapter = new ViewExpandableListAdapter(this, expandableListTitle, dummyDetail);
+        expandableListAdapter = new ViewExpandableListAdapter(this, expandableListTitle, dummyDetail, online);
         expandableListView.setAdapter(expandableListAdapter);
         progressDialog = new ProgressDialog(this);
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
@@ -138,18 +130,54 @@ public class ViewPatientActivity extends AppCompatActivity {
         });
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ViewPatientActivity.this, AddPatientActivity.class);
-                intent.putExtra("docId",docId);
-
-
+                intent.putExtra("docId", docId);
+                intent.putExtra("unit", unit);
+                intent.putExtra("online", online);
                 String intentData = new Gson().toJson(dummyDetail);
-                intent.putExtra("key",intentData);
+                intent.putExtra("key", intentData);
 
                 startActivity(intent);
+
+            }
+        });
+
+
+        FloatingActionButton del = findViewById(R.id.delete);
+        del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                if (getIntent().getExtras().containsKey("online") && (getIntent().getExtras().getBoolean("online") == false)) {
+                    //offline
+                    DBHelper dbHelper = new DBHelper(getApplicationContext());
+                    String selection = "UUID" + " = ?";
+                    String[] selectionArgs = {docId};
+
+                    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+                    db.delete(unit, selection, selectionArgs);
+                    finish();
+
+                } else {
+                    FirebaseAuth mAuth;
+
+                    mAuth = FirebaseAuth.getInstance();
+
+                    String user = mAuth.getCurrentUser().getUid();
+                    db.collection(user + "-" + unit).document(docId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(@NonNull Void unused) {
+                            finish();
+                        }
+                    });
+                }
+
 
             }
         });
@@ -162,16 +190,16 @@ public class ViewPatientActivity extends AppCompatActivity {
         super.onResume();
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean offline = sharedPref.getBoolean("offline", false);
+        boolean online = sharedPref.getBoolean("online", false);
 
-        if (offline) {
+        if (!online) {
 
             DBHelper dbHelper = new DBHelper(this);
             String selection = "UUID" + " = ?";
             String[] selectionArgs = {docId};
 
             SQLiteDatabase db = dbHelper.getReadableDatabase();
-            Cursor cursor = db.query("PATIENTS", null, selection, selectionArgs, null, null, null, null);
+            Cursor cursor = db.query(unit, null, selection, selectionArgs, null, null, null, null);
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
                     String data = cursor.getString(cursor.getColumnIndex("DATA"));
@@ -192,7 +220,11 @@ public class ViewPatientActivity extends AppCompatActivity {
 
 
         } else {
-            db.collection("users").document(docId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            FirebaseAuth mAuth;
+
+            mAuth = FirebaseAuth.getInstance();
+            String user = mAuth.getCurrentUser().getUid();
+            db.collection(user + "-" + unit).document(docId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {

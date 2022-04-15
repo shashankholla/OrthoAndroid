@@ -13,6 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:id="@+id/searchView"
+        app:iconifiedByDefault="false"
+        app:showAsAction="collapseActionView|ifRoom"
         />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -30,7 +32,7 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|right"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="75dp"
+        android:layout_marginBottom="20dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:src="@drawable/ic_add_black_24dp"

@@ -1,12 +1,6 @@
-package com.sharcodes.ortho;
+package com.sharcodes.ortho.models;
 
-import android.net.Uri;
-import android.widget.Button;
-import android.widget.EditText;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 public class FormClass {
@@ -18,15 +12,18 @@ public class FormClass {
     public String title;
     public String content;
     public HashMap<String, String> imagePath; //name,uri
+    public HashMap<String, String> links; //name,uri
 
-    FormClass(String id, String title, String group){
+    FormClass(String id, String title, String group) {
         this.id = id;
         this.title = title;
         this.group = group;
         this.imagePath = new HashMap<>();
+        this.links = new HashMap<>();
         this.uid = UUID.randomUUID().toString();
     }
-    FormClass(String id) {
+
+    public FormClass(String id) {
         this.id = id;
     }
 

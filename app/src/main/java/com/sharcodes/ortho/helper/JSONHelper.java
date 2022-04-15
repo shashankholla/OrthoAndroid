@@ -20,8 +20,7 @@ public class JSONHelper {
                 obj.put(key, mapToJSON(subMap));
             } else if (value instanceof List) {
                 obj.put(key, listToJSONArray((List) value));
-            }
-            else {
+            } else {
                 obj.put(key, value);
             }
         }
@@ -30,14 +29,12 @@ public class JSONHelper {
 
     public static JSONArray listToJSONArray(List<Object> list) throws JSONException {
         JSONArray arr = new JSONArray();
-        for(Object obj: list) {
+        for (Object obj : list) {
             if (obj instanceof Map) {
                 arr.put(mapToJSON((Map) obj));
-            }
-            else if(obj instanceof List) {
+            } else if (obj instanceof List) {
                 arr.put(listToJSONArray((List) obj));
-            }
-            else {
+            } else {
                 arr.put(obj);
             }
         }

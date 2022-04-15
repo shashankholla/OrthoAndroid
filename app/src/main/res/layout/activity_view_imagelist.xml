@@ -2,7 +2,7 @@
 
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/text1"
-
+            android:autoLink="web"
             android:maxLines="2"
             android:ellipsize="end"
             android:layout_width="match_parent"

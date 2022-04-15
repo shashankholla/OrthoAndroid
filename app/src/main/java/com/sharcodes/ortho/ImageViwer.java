@@ -1,16 +1,12 @@
 package com.sharcodes.ortho;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
-import com.github.piasy.biv.BigImageViewer;
-import com.github.piasy.biv.indicator.progresspie.ProgressPieIndicator;
-//import com.github.piasy.biv.loader.glide.GlideImageLoader;
-import com.github.piasy.biv.view.BigImageView;
 import com.stfalcon.imageviewer.StfalconImageViewer;
 import com.stfalcon.imageviewer.loader.ImageLoader;
 
@@ -34,8 +30,6 @@ public class ImageViwer extends AppCompatActivity {
         })
                 .withHiddenStatusBar(true)
                 .show();
-
-
 
 
 //        BigImageView bigImageView = (BigImageView) findViewById(R.id.mBigImage);

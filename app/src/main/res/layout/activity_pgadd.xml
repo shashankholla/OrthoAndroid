@@ -64,7 +64,6 @@
             android:hint="Thesis" />
 
         <ImageButton
-            android:id="@+id/classib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/classet"
@@ -98,7 +97,6 @@
             android:hint="Paper Presentation" />
 
         <ImageButton
-            android:id="@+id/preopib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/cpreopet"
@@ -130,7 +128,6 @@
             android:hint="Poster Presentation" />
 
         <ImageButton
-            android:id="@+id/treatmentib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/treatmentet"
@@ -165,7 +162,6 @@
             android:hint="Publications" />
 
         <ImageButton
-            android:id="@+id/cpostib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/cpostet"
@@ -195,7 +191,6 @@
             android:hint="case presentation,seminars" />
 
         <ImageButton
-            android:id="@+id/imageimplant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/cprognosiset"
@@ -226,7 +221,6 @@
             android:hint="Add your points about pg" />
 
         <ImageButton
-            android:id="@+id/examib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/examet"
@@ -258,7 +252,6 @@
             android:hint="My Data" />
 
         <ImageButton
-            android:id="@+id/mydataib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/mydataet"
@@ -288,7 +281,6 @@
             android:hint="Credits" />
 
         <ImageButton
-            android:id="@+id/myplansib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/myplanset"
@@ -320,7 +312,6 @@
             android:hint="Books" />
 
         <ImageButton
-            android:id="@+id/booksib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/bookset"
@@ -351,7 +342,6 @@
             android:hint="PPT,QandA,Discussion" />
 
         <ImageButton
-            android:id="@+id/teachib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/teachet"
@@ -383,7 +373,6 @@
             android:hint="Study aims" />
 
         <ImageButton
-            android:id="@+id/aimsib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/aimset"
@@ -394,7 +383,6 @@
             android:src="@drawable/camera" />
 
         <Button
-            android:id="@+id/buttonCreate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/aimset"

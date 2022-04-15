@@ -1,6 +1,5 @@
-package com.sharcodes.ortho;
+package com.sharcodes.ortho.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.icu.text.SimpleDateFormat;
@@ -8,18 +7,18 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.sharcodes.ortho.R;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,21 +32,25 @@ import java.util.Date;
 import java.util.Locale;
 
 public class HomeActivity extends AppCompatActivity {
-    Button btn1,btn2,btn3;
+    Button btn1, btn2, btn3, btn4, btn5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        btn1 = (Button) findViewById(R.id.unitone);
-        btn2 = (Button) findViewById(R.id.unittwo);
-        btn3 = (Button) findViewById(R.id.unitthree);
+        btn1 = findViewById(R.id.unitone);
+        btn2 = findViewById(R.id.unittwo);
+        btn3 = findViewById(R.id.unitthree);
+        btn4 = findViewById(R.id.unitfour);
+        btn5 = findViewById(R.id.unitfive);
 
 
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                intent.putExtra("unit", "unit1");
                 startActivity(intent);
             }
 
@@ -55,7 +58,8 @@ public class HomeActivity extends AppCompatActivity {
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, NewActivity.class);
+                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                intent.putExtra("unit", "unit2");
                 startActivity(intent);
             }
 
@@ -63,7 +67,28 @@ public class HomeActivity extends AppCompatActivity {
         btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, NewActivity.class);
+                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                intent.putExtra("unit", "unit3");
+                startActivity(intent);
+            }
+
+        });
+
+        btn4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                intent.putExtra("unit", "unit4");
+                startActivity(intent);
+            }
+
+        });
+
+        btn5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                intent.putExtra("unit", "unit5");
                 startActivity(intent);
             }
 
@@ -96,13 +121,12 @@ public class HomeActivity extends AppCompatActivity {
     public String getPath(Uri uri) {
 
         String path = null;
-        String[] projection = { MediaStore.Files.FileColumns.DATA };
+        String[] projection = {MediaStore.Files.FileColumns.DATA};
         Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
 
-        if(cursor == null){
+        if (cursor == null) {
             path = uri.getPath();
-        }
-        else{
+        } else {
             cursor.moveToFirst();
             int column_index = cursor.getColumnIndexOrThrow(projection[0]);
             path = cursor.getString(column_index);
@@ -114,14 +138,13 @@ public class HomeActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(requestCode == 1)
-        {
+        if (requestCode == 1) {
             InputStream in = null;
             OutputStream out = null;
             Uri content_describer = data.getData();
             File sd = Environment.getExternalStorageDirectory();
             File appdata = Environment.getDataDirectory();
-            String  currentDBPath= "//data//" + getPackageName()
+            String currentDBPath = "//data//" + getPackageName()
                     + "//databases//" + "FeedReader.db";
             try {
                 in = getContentResolver().openInputStream(content_describer);
@@ -141,8 +164,6 @@ public class HomeActivity extends AppCompatActivity {
             }
 
 
-
-
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -153,8 +174,6 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         startActivityForResult(intent, 1);
-
-
 
 
     }
@@ -169,13 +188,13 @@ public class HomeActivity extends AppCompatActivity {
             File data = Environment.getDataDirectory();
 
             if (sd.canWrite()) {
-                String  currentDBPath= "//data//" + getPackageName()
+                String currentDBPath = "//data//" + getPackageName()
                         + "//databases//" + "FeedReader.db";
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
                 String currentDateandTime = sdf.format(new Date());
 
-                String backupDBPath  = "/Ortho/OrthoBackup-" + currentDateandTime + ".db";
+                String backupDBPath = "/Ortho/OrthoBackup-" + currentDateandTime + ".db";
                 File currentDB = new File(data, currentDBPath);
                 File backupDB = new File(sd, backupDBPath);
 

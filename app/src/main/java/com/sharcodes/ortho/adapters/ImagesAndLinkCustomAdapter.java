@@ -1,4 +1,4 @@
-package com.sharcodes.ortho;
+package com.sharcodes.ortho.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,19 +10,25 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sharcodes.ortho.activities.AddPatientActivity;
+import com.sharcodes.ortho.models.FormClass;
+import com.sharcodes.ortho.R;
+
 import java.util.List;
 
-public class ImageListCustomAdapter extends RecyclerView.Adapter<ImageListCustomAdapter.ViewHolder> {
+public class ImagesAndLinkCustomAdapter extends RecyclerView.Adapter<ImagesAndLinkCustomAdapter.ViewHolder> {
 
 
     List<String> lista;
     Context context;
     FormClass child;
+    String adapterType;
 
-    public ImageListCustomAdapter(Context context, List<String> lista , FormClass child) {
+    public ImagesAndLinkCustomAdapter(Context context, List<String> lista, FormClass child, String adapterType) {
         this.context = context;
-        this.lista= lista;
+        this.lista = lista;
         this.child = child;
+        this.adapterType = adapterType;
     }
 
 //    @Override
@@ -37,6 +43,42 @@ public class ImageListCustomAdapter extends RecyclerView.Adapter<ImageListCustom
 //        return lista.get(arg0);
 //    }
 
+    @NonNull
+    @Override
+    public ImagesAndLinkCustomAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.activity_add_imagelist, viewGroup, false);
+        final ViewHolder holder = new ViewHolder(view);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ImagesAndLinkCustomAdapter.ViewHolder holder, final int position) {
+        holder.text.setText(lista.get(position));
+        holder.b2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+//                int pos = (int)arg0.getTag();
+
+                lista.remove(position);
+
+                if (adapterType.equals("images")) {
+                    ((AddPatientActivity) context).changeImages(child.id, child.group, lista);
+                } else {
+                    ((AddPatientActivity) context).changeLinks(child.id, child.group, lista);
+                }
+                ImagesAndLinkCustomAdapter.this.notifyDataSetChanged();
+            }
+        });
+
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return lista.size();
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         Button b2;
@@ -49,42 +91,7 @@ public class ImageListCustomAdapter extends RecyclerView.Adapter<ImageListCustom
             text = view.findViewById(R.id.text1);
 
 
-
         }
-    }
-
-
-    @NonNull
-    @Override
-    public ImageListCustomAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.activity_add_imagelist, viewGroup, false);
-        final ViewHolder holder = new ViewHolder(view);
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ImageListCustomAdapter.ViewHolder holder, final int position) {
-        holder.text.setText(lista.get(position));
-        holder.b2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-//                int pos = (int)arg0.getTag();
-
-                lista.remove(position);
-
-                ((AddPatientActivity)context).changeImages(child.id, child.group, lista);
-                ImageListCustomAdapter.this.notifyDataSetChanged();            }
-        });
-
-
-    }
-
-
-    @Override
-    public int getItemCount() {
-        return lista.size();
     }
 
 //    @Override
