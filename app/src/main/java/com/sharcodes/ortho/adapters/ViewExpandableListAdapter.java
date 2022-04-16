@@ -1,4 +1,4 @@
-package com.sharcodes.ortho;
+package com.sharcodes.ortho.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -24,6 +24,7 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.sharcodes.ortho.R;
 import com.sharcodes.ortho.helper.DBHelper;
 import com.sharcodes.ortho.models.FormClass;
 import com.stfalcon.imageviewer.StfalconImageViewer;
@@ -140,58 +141,36 @@ public class ViewExpandableListAdapter extends BaseExpandableListAdapter {
 //                boolean offline = sharedPref.getBoolean("offline", false);
 
                 if (!online) {
-                    String imageUUID = filePath.get(position);
                     DBHelper dbHelper = new DBHelper(context);
                     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-                    String selection = "UUID=?";
-                    String[] selectionArgs = {imageUUID};
 
-                    Cursor cursor = db.query("IMAGES", null, selection, selectionArgs, null, null, null, null);
-                    if (cursor.moveToFirst()) {
-                        while (!cursor.isAfterLast()) {
-                            String uuid = cursor.getString(cursor.getColumnIndex("UUID"));
+                    Uri[] uriList = new Uri[filePath.size()];
+
+                    for(int i = 0; i < filePath.size(); i++) {
+
+                        String imageUUID = filePath.get(i);
+
+                        String selection = "UUID=?";
+                        String[] selectionArgs = {imageUUID};
+                        Cursor cursor = db.query("IMAGES", null, selection, selectionArgs, null, null, null, null);
+                        if (cursor.moveToFirst()) {
+                            while (!cursor.isAfterLast()) {
+                                String uuid = cursor.getString(cursor.getColumnIndex("UUID"));
 //                            byte[] blob = cursor.getBlob(cursor.getColumnIndex("DATA"));
-                            String imageUri = cursor.getString(cursor.getColumnIndex("DATA"));
+                                String imageUri = cursor.getString(cursor.getColumnIndex("DATA"));
+                                uriList[i] = Uri.parse(imageUri);
 //                            Bitmap theImage = DbBitmapUtility.getImage(blob);
-                            new StfalconImageViewer.Builder<Uri>(context, new Uri[]{Uri.parse(imageUri)}, new ImageLoader<Uri>() {
-                                @Override
-                                public void loadImage(ImageView imageView, Uri image) {
-
-                                    CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
-                                    circularProgressDrawable.setStrokeWidth(5f);
-                                    circularProgressDrawable.setCenterRadius(30f);
-                                    circularProgressDrawable.start();
-
-                                    RequestOptions requestOptions = new RequestOptions();
-                                    requestOptions.placeholder(circularProgressDrawable);
-
-//                            requestOptions.skipMemoryCache(true);
-                                    requestOptions.fitCenter();
 
 
-                                    Glide.with(context)
-//                                            .asBitmap()
-                                            .load(image)
-                                            .apply(requestOptions)
-                                            .into(imageView);
-                                }
-                            })
-                                    .withHiddenStatusBar(true)
-                                    .show();
-
-                            cursor.moveToNext();
+                                cursor.moveToNext();
+                            }
                         }
                     }
 
 
-                } else {
-//                    Intent i = new Intent(context, ImageViwer.class);
-//                    i.putExtra("image", filePath.get(position));
-                    Uri uri = Uri.parse(filePath.get(position));
 
-
-                    new StfalconImageViewer.Builder<Uri>(context, new Uri[]{uri}, new ImageLoader<Uri>() {
+                    new StfalconImageViewer.Builder<Uri>(context, uriList, new ImageLoader<Uri>() {
                         @Override
                         public void loadImage(ImageView imageView, Uri image) {
 
@@ -206,12 +185,60 @@ public class ViewExpandableListAdapter extends BaseExpandableListAdapter {
 //                            requestOptions.skipMemoryCache(true);
                             requestOptions.fitCenter();
 
+
                             Glide.with(context)
+//                                            .asBitmap()
                                     .load(image)
                                     .apply(requestOptions)
                                     .into(imageView);
                         }
                     })
+                            .withStartPosition(position)
+                            .withHiddenStatusBar(true)
+                            .show();
+
+
+                } else {
+//                    Intent i = new Intent(context, ImageViwer.class);
+//                    i.putExtra("image", filePath.get(position));
+                    Uri[] uriList = new Uri[filePath.size()];
+
+
+                    for(int i = 0; i < filePath.size(); i++) {
+
+                            uriList[i] = Uri.parse(filePath.get(i));
+
+
+                    }
+
+
+
+
+
+                    new StfalconImageViewer.Builder<Uri>(context, uriList, new ImageLoader<Uri>() {
+                        @Override
+                        public void loadImage(ImageView imageView, Uri image) {
+
+                            CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
+                            circularProgressDrawable.setStrokeWidth(5f);
+                            circularProgressDrawable.setCenterRadius(30f);
+                            circularProgressDrawable.start();
+
+                            RequestOptions requestOptions = new RequestOptions();
+                            requestOptions.placeholder(circularProgressDrawable);
+
+//                            requestOptions.skipMemoryCache(true);
+                            requestOptions.fitCenter();
+
+
+                            Glide.with(context)
+                                    .load(image)
+                                    .apply(requestOptions)
+                                    .placeholder(circularProgressDrawable)
+                                    .into(imageView);
+                        }
+                    })
+                            .withStartPosition(position)
                             .withHiddenStatusBar(true)
                             .show();
 

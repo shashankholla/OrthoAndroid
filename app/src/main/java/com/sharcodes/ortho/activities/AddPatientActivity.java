@@ -106,6 +106,7 @@ public class AddPatientActivity extends AppCompatActivity {
         }
 
 
+
         for (String topKey : dummyDetail.keySet()) {
             for (String key : dummyDetail.get(topKey).keySet()) {
                 dummyDetail.get(topKey).replace(key, expandableListDetail.get(topKey).get(key));
@@ -387,7 +388,10 @@ public class AddPatientActivity extends AppCompatActivity {
         }
 
 
-        ImagePicker.with(this)
+
+
+        ImagePicker.Companion.with(this)
+                .allowMultiple(true)
                 .saveDir(directory)
                 .start();
     }
@@ -406,9 +410,20 @@ public class AddPatientActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             Uri uri = data.getData();
+            List<File> ll = ImagePicker.Companion.getFiles(data);
 
             LinkedHashMap<String, FormClass> k = expandableListDetail.get(mainTitle);
-            k.get(mainListId).imagePath.put(getFileName(uri), uri.toString());
+            for(File f : ll) {
+                Uri urix = Uri.fromFile(f);
+                k.get(mainListId).imagePath.put(getFileName(urix), urix.toString());
+            }
+            if(uri != null) {
+                k.get(mainListId).imagePath.put(getFileName(uri), uri.toString());
+            }
+
+
+
+//            k.get(mainListId).imagePath.put(getFileName(uri), uri.toString());
             expandableListView.invalidateViews();
         }
     }
