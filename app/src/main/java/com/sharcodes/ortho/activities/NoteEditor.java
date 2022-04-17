@@ -118,12 +118,38 @@ public class NoteEditor extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(uuid == null || uuid.isEmpty()) {
-                    String selection = "UUID" + " = ?";
-                    String[] selectionArgs = {uuid};
-                    db.delete("NOTES_"+unit, selection, selectionArgs);
-                }
-                finish();
+
+
+                new AlertDialog.Builder(NoteEditor.this)
+                        .setTitle("Delete?")
+                        .setMessage("Do you want to delete your note?")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(uuid != null && !uuid.isEmpty()) {
+                                    String selection = "UUID" + " = ?";
+                                    String[] selectionArgs = {uuid};
+                                    db.delete("NOTES_"+unit, selection, selectionArgs);
+                                }
+                                finish();
+                            }
+                        })
+
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                finish();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+
+
+
             }
         });
 

@@ -46,6 +46,7 @@
             app:layout_constraintTop_toBottomOf="@id/date"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/custom_border_textedit"
             app:layout_constraintBottom_toBottomOf="parent"
             android:inputType="text|textMultiLine"
@@ -73,8 +74,8 @@
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:src="@drawable/ic_add_black_24dp"
-        app:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ic_baseline_save_24"
+        app:backgroundTint="#009961"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
